@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>WebSocket Testing Engine: Help, Info by AivanF.</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<style type="text/css">
+		.code {
+			font-family: monospace;
+			background-color: #dddddd;
+			padding-left: 6px;
+			padding-right: 6px;
+		}
+		div.code {
+			margin-top: 6px;
+			margin-bottom: 6px;
+		}
+		.command {
+			color: #960;
+		}
+		img {
+			max-width: 100%;
+		}
+	</style>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-99085086-1', 'auto');
+  ga('send', 'pageview');
+    </script>
+</head>
+<body style="background-color: #DDD;">
+<div class="container-fluid">
+
+	<div class="col-xs-12 col-md-2"></div>
+	<div class="col-xs-12 col-md-8" style="margin-top: 16px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3><a href="./wstester.html">WebSocket Testing Engine</a>: Help &amp; Info</h3>
+			</div>
+			<div class="panel-body" style="padding-bottom: 48px;">
+				<h3>1. Intro</h3>
+				<p>
+					In contrast to HTTP requests, WebSockets are much more quick, but also much more complicated to develop and maintain. Since there is no predefined way to check the sequence of messages, and if it even was, frquently you just don't know the exact order of them!
+				</p><p>
+					This application is created to solve this problem. <strong>WS Teste Engine</strong> is a tool, an HTML5 based framework for unit testing of online systems with WebSockets. To test a system, you just need to provide simple controlling code in JavaScript and run WS Testing Engine!
+				</p>
+
+				<h3>2. JS data files description</h3>
+				<p>
+					Any test in WS Testing Engine consists of flows (which may be considered as <i>unit tests</i>). And each flow may be an array or a dictionary with unit objects. If flow object is a list, all its units are run in the order of their indices by default. If flow object is a dictionary, all its units must provide next unit. Any flow object must have name as a string at 0 key, and entry unit object at 1 key. Each flow begins when previous one ends (obviously, excluding the first one).
+				</p>
+				Unit object structure:<br>
+				<div class="code">
+					{<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;name: string,<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;enter: <span class="command">function</span> () {},<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;task: <span class="command">function</span> (ws, ref) {},<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;condition: <span class="command">function</span> (data) {},<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;key: string,<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;val: any type,<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;finalise: <span class="command">function</span> (ws) {},<br>
+					}
+				</div>
+				<p>
+					All the fields are not strictly necessary. However, <span class="code">task</span> may be skipped only in one case only <i>(when a unit is entry poing of a flow; only <span class="code">enter</span> function returning string key of other unit must present this way)</i>, so, don't forget to add it.
+				</p><p>
+					Function named <span class="code">task</span> of each unit is run only if previous unit object succeeded.
+					To assert it, <span class="code">condition</span>, <span class="code">key</span> and <span class="code">val</span> are used. So, initially <span class="code">task</span> of a unit object is run, then the Controller object waits for appropriate message. But if there is no result, after specific amount of time the unit object and its flow will be failed.
+				</p><p>
+					Function named <span class="code">task</span> can return nothing or a single dictionary or an array of dictionaries to be send as JSON (in the second case multiple messages will be sent). Also, it can set value to <span class="code">ref.next</span> to change next unit.
+				</p>
+				</p><p>
+					A unit object can follow these patterns for assertion:
+				</p>
+				<ul>
+					<li><p>
+						If <span class="code">condition</span> is specified, it will get parsed JSON as <span class="code">data</span> argument and must return bool for going to next unit or failing (if flow object is an array), or an integer or string for going to specific unit object. String or integer result will override next unit specified by <span class="code">task</span> function in <span class="code">ref.next</span>.
+					</p></li>
+					<li><p>
+						If both <span class="code">key</span> and <span class="code">val</span> are specified, then expression <span class="code">data[key]==val</span> will be used to assert. Also, <span class="code">val</span> may be an array, then if any of its value equals to <span class="code">data[key]</span>, then assertion is true.
+					</p></li>
+					<li><p>
+						If <span class="code">key</span> only is specified <i>(not <span class="code">val</span>)</i>, the value of <span class="code">data[key]</span> will be used as bool.
+					</p></li>
+				</ul>
+				</p><p>
+					Function named <span class="code">finalise</span> is called on unit objects success. Its result is handled the same as the result of <span class="code">task</span> function.
+				</p><p>
+					Function named <span class="code">enter</span> is called if unit does not have <span class="code">task</span> function, and must return key of next unit. This function is similar to operators <span class="code">continue</span>, <span class="code">skip</span> and <span class="code">pass</span> in some languages.
+				</p>
+
+				<h3>3. Other parameters</h3>
+				<p>
+					You can manage WS Testing Engine behavior widely using provided GUI. The list below describes it. By the way, most of these parameters can be set from JS data file with <span class="code">args</span> object.
+				</p>
+				<ul>
+					<li><p>
+						Of course, you have to provide <b>server address</b> (<span class="code">args.server</span> from code) for WebSockets connection and <b>JS data file</b>. This file may be loaded from the Internet (you have to put the url and click button) or from your computer (just choose the file).
+					</p></li>
+					<li><p>
+						You can set <b>waiting time</b> (<span class="code">args.waiting_time</span>): amount of time before unit fails if has no appropriate messafe. The value 1000 means one second.
+					</p></li>
+					<li><p>
+						You can set <b>delay</b> (<span class="code">args.delay</span>): amount of time before between one units end and another units begin. The value 1000 means one second.
+					</p></li>
+					<li><p>
+						You can use <b>"print messages content"</b> checkbox. If it is set, you will see sent and received messages and come other comments.
+					</p></li>
+					<li><p>
+						You can use <b>"split flows connections"</b> checkbox (<span class="code">args.split</span>). If it is set, each flow gets a new WebSockets connection.
+					</p></li>
+				</ul>
+
+				<h3>4. Execution paths</h3>
+				Single unit execution:
+				<br><br>
+				<img src="res/StartUnit.png">
+				<br><br><br><br>
+				WebSockets messages handling process:
+				<br><br>
+				<img src="res/Message.png">
+
+				<h3>5. Example files</h3>
+				<p>
+					There are plenty files ready to use and investigate WS Test Engine on practice:
+				</p>
+				<ul>
+					<li><p>
+						<b><a href="http://www.aivanf.com/static/wstest/data_toy.js">data_toy.js</a></b> – real tests of <a href="http://www.aivanf.com/eng/note/tactictoy">TacticToy logical game</a>, 4 flows, 16 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_toy.js"><b>Run file.</b></a><br>
+						Features: <span class="code">data[key]==val</span>; <span class="code">condition</span>; unit as a dictionary; units skipping by condition and <span class="code">ref.next</span>.
+					</p></li>
+					<li><p>
+						<b><a href="http://www.aivanf.com/static/wstest/data_gdax.js">data_gdax.js</a></b> – example test of <a href="https://docs.gdax.com/#subscribe">GDAX WebSocket API</a>, 3 flows, 3 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_gdax.js"><b>Run file.</b></a><br>
+						Features: <span class="code">data[key]==val</span>; <span class="code">val</span> as array; <span class="code">args.split</span>.
+					</p></li>
+					<li><p>
+						<b><a href="http://www.aivanf.com/static/wstest/data_block.js">data_block.js</a></b> – example test of <a href="https://blockchain.info/api/api_websocket">Blockchain transaction WebSocket API</a>, 1 flow, 3 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_block.js"><b>Run file.</b></a><br>
+						Features: <span class="code">data[key]==val</span>; <span class="code">finalise</span>.
+					</p></li>
+					<li><p>
+						<b><a href="http://www.aivanf.com/static/wstest/data_ether.js">data_ether.js</a></b> – example test of <a href="https://etherscan.io/apis#websocket">The Etherscan Block Explorer WebSocket API</a>, 2 flows, 6 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_ether.js"><b>Run file.</b></a><br>
+						Features: <span class="code">data[key]==val</span>; unit as a dictionary, <span class="code">ref.next</span>; <span class="code">args.split</span>.
+					</p></li>
+				</ul>
+			</div>
+		</div>
+		<div class="text-center" style=" margin-bottom: 64px;">
+			<a href="http://www.aivanf.com">Developed by AivanF. 2018</a>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-2"></div>
+
+</div>
+</body>
+</html>

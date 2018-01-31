@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>WebSocket Testing Engine by AivanF.</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="./wstester.min.js"></script>
+	<!-- <script src="./wstester.js"></script> -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<style type="text/css">
+		.res-hidden,.res-good,.res-bad,.res-usual {
+			overflow-wrap: break-word;
+		}
+		.res-hidden {
+			color: #AAA;
+		}
+		.res-good {
+			color: #4A4;
+		}
+		.res-bad {
+			color: #A44;
+		}
+		.res-usual {
+			color: #45A;
+		}
+	</style>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-99085086-1', 'auto');
+  ga('send', 'pageview');
+    </script>
+</head>
+<body style="background-color: #DDD;">
+<div class="container-fluid">
+
+	<div class="col-xs-12 col-md-2"></div>
+	<div class="col-xs-12 col-md-4" style="margin-top: 16px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3>WebSocket Testing Engine</h3>
+			</div>
+			<div class="panel-body" style="min-height: 256px;">
+				<b>Address:</b>
+				<br>
+				<input type="text" id="in_link" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:95%" value="wss://echo.websocket.org">
+				<br>
+				
+				<br>
+				<b>Load JS data file from web:</b>
+				<br>
+				<input type="text" id="in_data" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:95%" value="./data_gdax.js">
+				<div class="text-center" style="margin-top: 8px; margin-bottom: 12px;">
+					<button type="button" id="btn_load">Load file</button>
+				</div>
+
+				<b>Or local JS data file:</b>
+				<br>
+				<input type="file" id="files" name="files[]" />
+				
+				<br>
+				<b>Time wait before fail:</b>
+				<br>
+				<input type="number" id="in_wait" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:95%" value="2000">
+
+				<br>
+				<b>Delay:</b>
+				<br>
+				<input type="number" id="in_delay" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width:95%" value="500">
+				
+				<br>
+				<input type="checkbox" id="ch_content" name="ch_content">
+				<label for="ch_content">Print messages content?</label>
+				
+				<br>
+				<input type="checkbox" id="ch_split" name="ch_split">
+				<label for="ch_split">Split flows connections?</label>
+
+				<div class="text-center" style="margin-top: 16px;">
+					<div class="btn-group">
+						<button type="button" class="btn btn-success" id="btn_test">Start testing</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="text-center">
+			<a href="http://www.aivanf.com">Developed by AivanF. 2018</a>
+			<br>
+			<a href="./wstester_info.html">Help &amp; Info</a>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-4" style="margin-top: 16px; margin-bottom: 128px;">
+		<div id="output" class="panel panel-default">
+			<div class="panel-body" style="min-height: 256px;">
+				<div id="tofill"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-2"></div>
+
+	<script>
+		function getUrlParameter(sParam) {
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('&'),
+				sParameterName,
+				i;
+			for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+				if (sParameterName[0] === sParam) {
+					return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+			}
+		}
+
+		var $tofill = $("#tofill");
+		var $output = $("#output");
+		var $btn_load = $("#btn_load");
+		var $btn_test = $("#btn_test");
+		var $in_data = $("#in_data");
+		var $in_link = $("#in_link");
+		var $in_wait = $("#in_wait");
+		var $in_delay = $("#in_delay");
+		var $ch_content = $("#ch_content");
+		var $ch_split = $("#ch_split");
+
+		// Saves parameters for simple using
+		function updateUrl() {
+			var urlargs = '?server=' + encodeURIComponent($in_link.val())
+				+ '&wait=' + $in_wait.val() + '&delay=' + $in_delay.val()
+				+ '&split=' + (+$ch_split.is(":checked"));
+			if ($in_data.val().length > 6) {
+				urlargs += '&data=' + encodeURIComponent($in_data.val());
+			}
+			history.pushState('', 'WebSocket Testing Engine', domain + urlargs);
+		}
+
+		// Nicely prints testing notes
+		function add(val, kind) {
+			if (kind == 1) {
+				if ($ch_content.is(":checked")) {
+					$tofill.append('<span class="res-hidden">' + val + '</span><br>');
+				}
+			} else if (kind == 2) {
+				$tofill.append('<span class="res-good">' + val + '</span><br>');
+			} else if (kind == 3) {
+				$tofill.append('<span class="res-bad">' + val + '</span><br>');
+			} else {
+				$tofill.append('<span class="res-usual">' + val + '</span><br>');
+			}
+		}
+
+		// Just removes texts from output
+		function clear() {
+			$tofill.html("");
+		}
+
+		var ctrl;
+		var global_flows;
+
+		// Parses JS data
+		function loadJS (data) {
+			// reset GUI
+			clear();
+			$output.css('background-color', '#FFF');
+			$btn_test.prop('disabled', false);
+			// clear context
+			if (ctrl) {
+				ctrl.abort();
+				ctrl = null;
+			}
+			var flows = null;
+			var args = null;
+			var title = null;
+			// parse
+			eval(data);
+			// load predefined args
+			if (args) {
+				if (args.server) {
+					$in_link.val(args.server);
+				}
+				if (args.waiting_time !== undefined) {
+					$in_wait.val(args.waiting_time);
+				}
+				if (args.delay !== undefined) {
+					$in_delay.val(args.delay);
+				}
+				if (args.split !== undefined) {
+					$ch_split.prop("checked", !!args.split);
+				}
+			}
+			if (title) {
+				add("&lt;" + title + "&gt; is loaded!<br>");
+			}
+			// start testing
+			if (flows) {
+				// save flows
+				global_flows = flows;
+				// update URL address
+				updateUrl();
+				// brief flows description
+				add("- Flows:");
+				for (var i = 0; i < flows.length; i++) {
+					add(flows[i][0] + " – " + (Object.keys(flows[i]).length - 1) + " units");
+				}
+			} else {
+				add("- Data file does not contain flows!", 3);
+			}
+		}
+
+		// Loads flows from external JS file
+		function handleExternalFile() {
+			$.ajax({
+				url: $in_data.val(),
+				success: function( data ) {
+					loadJS(data);
+				},
+				error: function( data ) {
+					clear();
+					add("- Data file was not loaded!", 3);
+				}
+			});
+		}
+		$btn_load.click(handleExternalFile);
+
+		// Loads JS from local file
+		function handleFileSelect(evt) {
+			var files = evt.target.files; // FileList object
+			for (var i = 0, f; f = files[i]; i++) {
+				var reader = new FileReader();
+				// Closure
+				reader.onload = (function(theFile) {
+					return function(e) {
+						try {
+							loadJS(e.target.result);
+							$in_data.val("");
+							updateUrl();
+						} catch(err) {
+							clear();
+							add("The file is not valid JavaScript!", 3);
+						}
+					};
+				})(f);
+				reader.readAsText(f);
+			}
+		}
+		document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+		// Starts testing process
+		$btn_test.click( function() {
+			if (global_flows) {
+				clear();
+
+				ctrl = WSTester.Controller({
+					"add": add,
+					"flows": global_flows,
+					"server": $in_link.val(),
+					"waiting_time": $in_wait.val(),
+					"delay": $in_delay.val(),
+					"split": $ch_split.is(":checked"),
+
+					"work_begin": function () {
+						$btn_test.prop('disabled', true);
+						$output.css('background-color', '#FFE');
+					},
+					"work_end": function (pass_count,fail_count,total_count) {
+						$btn_test.prop('disabled', false);
+						if (fail_count == 0 && (pass_count+fail_count == total_count)) {
+							$output.css('background-color', '#EFE');
+						} else {
+							$output.css('background-color', '#FEE');
+						}
+					},
+				});
+			} else {
+				clear();
+				add("- Flows are not loaded!", 3);
+			}
+		});
+
+		// Load parameters from URL
+		var domain = window.location.href.split('?')[0];
+		var url = window.location.href;
+		if (url.includes('data')) {
+			$in_data.val(getUrlParameter('data'));
+			handleExternalFile();
+		}
+		if (url.includes('server')) {
+			$in_link.val(getUrlParameter('server'));
+		}
+		if (url.includes('wait')) {
+			$in_wait.val(getUrlParameter('wait'));
+		}
+		if (url.includes('delay')) {
+			$in_delay.val(getUrlParameter('delay'));
+		}
+		if (url.includes('split')) {
+			$ch_split.prop("checked", !!(parseInt(getUrlParameter('split'))));
+		}
+
+	</script>
+
+</div>
+</body>
+</html>
