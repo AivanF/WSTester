@@ -12,7 +12,9 @@ or [read about structure and usage of the library](http://www.aivanf.com/static/
 
 - **`wstester.html`** – GUI for simple usage.
 
-- **`wstester_info.html`** – description of the library.
+- **`wstester_info.html`** – describes how to create flows and units; this is enough for WSTester GUI usage.
+
+- **`wstester_info_extra.html`** – describes more details, this is helpful for usage of the WSTester library itself.
 
 - **`tests/*`** – exemplary tests.
 
