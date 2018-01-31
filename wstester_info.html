@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>WebSocket Testing Engine: Help, Info by AivanF.</title>
+	<title>WebSocket Testing Engine docs: Flows, Units - AivanF.</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -41,14 +41,23 @@
 	<div class="col-xs-12 col-md-8" style="margin-top: 16px;">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3><a href="./wstester.html">WebSocket Testing Engine</a>: Help &amp; Info</h3>
+				<h3><a href="wstester.html">WebSocket Testing Engine</a> docs: Flows &amp; Units</h3>
 			</div>
 			<div class="panel-body" style="padding-bottom: 48px;">
+				<h3>Content</h3>
+				<ul>
+					<li><a href="wstester.html"><b>WS Tester GUI</b></a></li>
+					<li>Info: Flows &amp; Units</li>
+					<li><a href="wstester_info_extra.html"><b>Extra info: the Library</b></a></li>
+				</ul>
+
 				<h3>1. Intro</h3>
 				<p>
 					In contrast to HTTP requests, WebSockets are much more quick, but also much more complicated to develop and maintain. Since there is no predefined way to check the sequence of messages, and if it even was, frquently you just don't know the exact order of them!
 				</p><p>
-					This application is created to solve this problem. <strong>WS Teste Engine</strong> is a tool, an HTML5 based framework for unit testing of online systems with WebSockets. To test a system, you just need to provide simple controlling code in JavaScript and run WS Testing Engine!
+					This application is created to solve this problem. <strong>WS Testing Engine</strong> is a tool, an HTML5 based framework for unit testing of online systems with WebSockets. To test a system, you just need to provide simple controlling code in JavaScript and run WS Testing Engine!
+				</p><p>
+					This page describes the usage and structure of flows and units. If you need to use the JS library itself, see extra info on the next page.
 				</p>
 
 				<h3>2. JS data files description</h3>
@@ -107,7 +116,7 @@
 						You can set <b>waiting time</b> (<span class="code">args.waiting_time</span>): amount of time before unit fails if has no appropriate messafe. The value 1000 means one second.
 					</p></li>
 					<li><p>
-						You can set <b>delay</b> (<span class="code">args.delay</span>): amount of time before between one units end and another units begin. The value 1000 means one second.
+						You can set <b>delay</b> (<span class="code">args.delay</span>): amount of time before between end of one unit and beginning of another. The value 1000 means one second.
 					</p></li>
 					<li><p>
 						You can use <b>"print messages content"</b> checkbox. If it is set, you will see sent and received messages and come other comments.
@@ -117,18 +126,9 @@
 					</p></li>
 				</ul>
 
-				<h3>4. Execution paths</h3>
-				Single unit execution:
-				<br><br>
-				<img src="res/StartUnit.png">
-				<br><br><br><br>
-				WebSockets messages handling process:
-				<br><br>
-				<img src="res/Message.png">
-
-				<h3>5. Example files</h3>
+				<h3>4. Example files</h3>
 				<p>
-					There are plenty files ready to use and investigate WS Test Engine on practice:
+					There are plenty files ready to use and investigate WS Testing Engine on practice:
 				</p>
 				<ul>
 					<li><p>
@@ -148,6 +148,8 @@
 						Features: <span class="code">data[key]==val</span>; unit as a dictionary, <span class="code">ref.next</span>; <span class="code">args.split</span>.
 					</p></li>
 				</ul>
+				<hr>
+				Continuation is on <a href="wstester_info_extra.html"><b>the next page</b></a>.
 			</div>
 		</div>
 		<div class="text-center" style=" margin-bottom: 64px;">

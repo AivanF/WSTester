@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>WebSocket Testing Engine docs: the Library - AivanF.</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<style type="text/css">
+		.code {
+			font-family: monospace;
+			background-color: #dddddd;
+			padding-left: 6px;
+			padding-right: 6px;
+		}
+		div.code {
+			margin-top: 6px;
+			margin-bottom: 6px;
+		}
+		.command {
+			color: #960;
+		}
+		img {
+			max-width: 100%;
+		}
+	</style>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-99085086-1', 'auto');
+  ga('send', 'pageview');
+    </script>
+</head>
+<body style="background-color: #DDD;">
+<div class="container-fluid">
+
+	<div class="col-xs-12 col-md-2"></div>
+	<div class="col-xs-12 col-md-8" style="margin-top: 16px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3><a href="./wstester.html">WebSocket Testing Engine</a> docs: the Library</h3>
+			</div>
+			<div class="panel-body" style="padding-bottom: 48px;">
+				<h3>Content</h3>
+				<ul>
+					<li><a href="wstester.html"><b>WS Tester GUI</b></a></li>
+					<li><a href="wstester_info.html"><b>Info: Flows &amp; Units</b></a></li>
+					<li>Extra info: the Library</li>
+				</ul>
+
+				<h3>5. Execution paths</h3>
+				The flowchart below depicts execution of single unit:
+				<br><br>
+				<img src="res/StartUnit.png">
+				<br><br><br>
+				Thi is how WSTester handles WebSockets messages:
+				<br><br>
+				<img src="res/Message.png">
+
+				<h3>6. Using WSTester library</h3>
+				<p>
+					To process flows you have to create a controller object by execution of <span class="code">WSTester.Controller</span> function with dictionary as an argument. The dictionary may contain the following fields:
+				</p>
+				<ul>
+					<li><p>
+						<span class="code">flows</span> – array or dictionary with unit objects. Required property.
+					</p></li>
+					<li><p>
+						<span class="code">server</span> – URL of WebSockets server. Required property.
+					</p></li>
+					<li><p>
+						<span class="code">waiting_time</span> – waiting time before current unit fails if there is no appropriate message found. Default value: <span class="code">2000</span> (2 seconds).
+					</p></li>
+					<li><p>
+						<span class="code">delay</span> – amount of time before between end of one unit and beginning of another. Default value: <span class="code">0</span>.
+					</p></li>
+					<li><p>
+						<span class="code">split</span> – if set, each flow gets a new WebSockets connection. Default value: <span class="code">false</span>.
+					</p></li>
+					<li><p>
+						<span class="code">add</span> – function for output, have these arguments: string for output and an integer number, the kind of output. The kind may be: 0 (general info), 1 (content of sent and received messages), 2 (good news), and 3 (bad news, errors).
+					</p></li>
+					<li><p>
+						<span class="code">work_begin</span> – function that is called every time new WebSocket connection established. Therefore, depending on the value of <span class="code">split</span>, the function may be called on the start of first or each flow. It takes no arguments.
+					</p></li>
+					<li><p>
+						<span class="code">work_end</span> – function that is called after completion of all the flows. It takes these numbers as arguments: count of passed flows, count of failed flows, and total number of the flows.
+					</p></li>
+				</ul>
+
+				<p>
+					All the arguments are used in WSTester GUI, so, you can open the source code and see the example of their usage.
+				</p>
+			</div>
+		</div>
+		<div class="text-center" style=" margin-bottom: 64px;">
+			<a href="http://www.aivanf.com">Developed by AivanF. 2018</a>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-2"></div>
+
+</div>
+</body>
+</html>
