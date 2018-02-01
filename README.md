@@ -1,8 +1,7 @@
 # WSTester
 This is WebSocket Testing Engine – JavaScript framework for unit testing of web systems through WebSockets.
 
-You can [open WSTester GUI](http://www.aivanf.com/static/wstest/wstester.html),
-or [read about structure and usage of the library](http://www.aivanf.com/static/wstest/wstester_info.html).
+You can [open WSTester GUI](http://www.aivanf.com/static/wstest/wstester.html), read about [flows (unit tests) structure and usage of the interface](http://www.aivanf.com/static/wstest/wstester_info.html), or read about [usage of the library itself](http://www.aivanf.com/static/wstest/wstester_info_extra.html).
 
 ## Project files
 
