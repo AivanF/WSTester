@@ -1,5 +1,5 @@
 /*!
- * WSTester v1.0
+ * WSTester v1.0.1
  * WebSocket Testing Engine is JavaScript library for unit testing of websystems with WebSockets.
  *
  * Copyright AivanF. 2018 - All Rights Reserved.
