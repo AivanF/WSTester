@@ -52,13 +52,16 @@
 				</ul>
 
 				<h3>5. Execution paths</h3>
-				The flowchart below depicts execution of single unit:
+				The flowchart below depicts execution of single unit inside WSTester:
 				<br><br>
 				<img src="res/StartUnit.png">
 				<br><br><br>
-				Thi is how WSTester handles WebSockets messages:
+				And this is how WSTester handles WebSockets messages:
 				<br><br>
 				<img src="res/Message.png">
+
+				<br><br>
+				Note that <i>"Fail unit"</i> node simply leads to the message <i>"Got irrelevent data"</i>. A flow cannot be failed before the <span class="code">waiting_time</span> exceeding, it will just wait for an appropriate message.
 
 				<h3>6. Using WSTester library</h3>
 				<p>
@@ -81,7 +84,7 @@
 						<span class="code">split</span> – if set, each flow gets a new WebSockets connection. Default value: <span class="code">false</span>.
 					</p></li>
 					<li><p>
-						<span class="code">add</span> – function for output, have these arguments: string for output and an integer number, the kind of output. The kind may be: 0 (general info), 1 (content of sent and received messages), 2 (good news), and 3 (bad news, errors).
+						<span class="code">add</span> – function for output, have the following arguments: <b>string</b> for output and an <b>integer number</b>, type of the output. The type may be: 0 (general info), 1 (content of sent and received messages), 2 (good news), and 3 (bad news, errors).
 					</p></li>
 					<li><p>
 						<span class="code">work_begin</span> – function that is called every time new WebSocket connection established. Therefore, depending on the value of <span class="code">split</span>, the function may be called on the start of first or each flow. It takes no arguments.
@@ -92,7 +95,7 @@
 				</ul>
 
 				<p>
-					All the arguments are used in WSTester GUI, so, you can open the source code and see the example of their usage.
+					All the arguments are used in <a href="wstester.html">WSTester GUI</a>, so, you can <a href="https://github.com/AivanF/WSTester/blob/master/wstester.html#L257">open the source code</a> and check an example of the library usage.
 				</p>
 			</div>
 		</div>

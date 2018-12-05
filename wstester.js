@@ -1,5 +1,5 @@
 /*!
- * WSTester v1.0.1
+ * WSTester v1.0.2
  * WebSocket Testing Engine is JavaScript library for unit testing of websystems with WebSockets.
  *
  * Copyright AivanF. 2018 - All Rights Reserved.
@@ -177,11 +177,11 @@ var WSTester = (function (window) {
     // Starts processing of the current flow.
     Controller.prototype.process_flow = function () {
         if (this.current_flow < this.flows.length) {
-            this.add("- Flow " + this.flow_name() + " is started.");
+            this.add("- Flow " + this.flow_name() + " is started.", 0);
             this.current_unit = 1;
             this.process_unit();
         } else {
-            this.add("<b>- Flows results:</b>");
+            this.add("<b>- Flows results:</b>", 0);
             var code = 0;
             if (this.pass_count > 0)
                 code = 2;
@@ -207,10 +207,10 @@ var WSTester = (function (window) {
             this.working = false;
             this.hws.onmessage = function(){};
             this.hws.close();
-            this.add("<br><hr>");
+            this.add("<br><hr>", 0);
             this.setup(this.server);
         } else {
-            this.add("<br><hr>");
+            this.add("<br><hr>", 0);
             this.process_flow();
         }
     };
@@ -225,9 +225,9 @@ var WSTester = (function (window) {
             if (!continue_flow) {
                 // Catch incorrect values
                 if (this.current_unit == this.flows[this.current_flow].length) {
-                    this.add("- Flow " + this.flow_name() + " is completed.");
+                    this.add("- Flow " + this.flow_name() + " is completed.", 0);
                 } else {
-                    this.add('- Warning: Flow ' + this.flow_name() + ' got undefined continue "' + this.current_unit + '"');
+                    this.add('- Warning: Flow ' + this.flow_name() + ' got undefined continue "' + this.current_unit + '"', 0);
                 }
             }   
         } else {
@@ -427,7 +427,7 @@ var WSTester = (function (window) {
 
     // Stops processing and prevents any output.
     Controller.prototype.abort = function () {
-        this.add = function(){};
+        this.add = function(txt, kind){};
         this.work_end = function(){};
         this.finish();
     };

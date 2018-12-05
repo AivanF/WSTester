@@ -62,7 +62,7 @@
 
 				<h3>2. JS data files description</h3>
 				<p>
-					Any test in WS Testing Engine consists of flows (which may be considered as <i>unit tests</i>). And each flow may be an array or a dictionary with unit objects. If flow object is a list, all its units are run in the order of their indices by default. If flow object is a dictionary, all its units must provide next unit. Any flow object must have name as a string at 0 key, and entry unit object at 1 key. Each flow begins when previous one ends (obviously, excluding the first one).
+					Any test in WS Testing Engine consists of <b>flows</b> (which may be considered as <i>unit tests</i>). And each flow may be an array or a dictionary with <b>unit objects</b>. If flow object is a list, all its units are run in the order of their positions by default. If flow object is a dictionary, all its units must provide a key of the next unit. Any flow object must have a string name at key 0 and entry unit object at 1 key. Each flow begins when the previous one ends (obviously, excluding the first one).
 				</p>
 				Unit object structure:<br>
 				<div class="code">
@@ -141,15 +141,15 @@
 					</p></li>
 					<li><p>
 						<b><a href="http://www.aivanf.com/static/wstest/data_block.js">data_block.js</a></b> – example test of <a href="https://blockchain.info/api/api_websocket">Blockchain transaction WebSocket API</a>, 1 flow, 3 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_block.js"><b>Run file.</b></a><br>
-						Features: <span class="code">data[key]==val</span>; <span class="code">finalise</span>.
+						Features: <span class="code">data[key]==val</span>; flow as an array; <span class="code">finalise</span>.
 					</p></li>
 					<li><p>
-						<b><a href="http://www.aivanf.com/static/wstest/data_ether.js">data_ether.js</a></b> – example test of <a href="https://etherscan.io/apis#websocket">The Etherscan Block Explorer WebSocket API</a>, 2 flows, 6 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_ether.js"><b>Run file.</b></a><br>
+						<b><a href="http://www.aivanf.com/static/wstest/data_ether.js">data_ether.js</a></b> – example test of <a href="https://etherscan.io/apis#websocket">The Etherscan Block Explorer WebSocket API</a>, 2 flows, 6 units. <a href="http://www.aivanf.com/static/wstest/wstester.html?data=http%3A%2F%2Fwww.aivanf.com%2Fstatic%2Fwstest%2Fdata_ether.js">Run file</a> (the API doesn't work since July 2018).<br>
 						Features: <span class="code">data[key]==val</span>; flow as a dictionary, <span class="code">ref.next</span>; <span class="code">args.split</span>.
 					</p></li>
 				</ul>
 				<hr>
-				Continuation is on <a href="wstester_info_extra.html"><b>the next page</b></a>.
+				Read about the library inner processes and API on <a href="wstester_info_extra.html"><b>the next page</b></a>.
 			</div>
 		</div>
 		<div class="text-center" style=" margin-bottom: 64px;">
